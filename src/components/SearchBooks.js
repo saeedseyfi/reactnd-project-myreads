@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import makeTrashable from 'trashable';
+import makeComponentTrashable from 'trashable-react';
 import Book from './Book';
 import ROUTES from '../constsnts/routes';
 import MESSAGES from '../constsnts/messages';
@@ -12,7 +12,6 @@ class SearchBooks extends React.Component {
         books: [],
         query: ''
     };
-    trashablePromises = []; // To keep track of async side effect
     previousSearchPromise; // To abort the last request if it's still pending
     keyPressTimeout; // To make sure we don't send repeated requests to server while typing
     searchInput; // To keep a reference of input to focus on it
@@ -21,21 +20,13 @@ class SearchBooks extends React.Component {
         this.searchInput.focus();
     }
 
-    componentWillUnmount() {
-        // To make sure the is no async side effect running
-        while (this.trashablePromises.length) {
-            this.trashablePromises.shift().trash();
-        }
-    }
-
     search = query => {
         // Forget about the previous request if it's still running
         if (this.previousSearchPromise) {
             this.previousSearchPromise.trash();
         }
 
-        const promise = BooksAPI.search(query);
-        const trashablePromise = makeTrashable(promise);
+        const trashablePromise = this.props.registerPromise(BooksAPI.search(query));
 
         trashablePromise.then(books => {
             if (books) {
@@ -54,7 +45,6 @@ class SearchBooks extends React.Component {
         });
 
         this.previousSearchPromise = trashablePromise;
-        this.trashablePromises.push(trashablePromise);
     };
 
     onChangeQuery = e => {
@@ -70,30 +60,26 @@ class SearchBooks extends React.Component {
         if (query) {
             this.setState({loading: true});
 
-            this.keyPressTimeout = setTimeout(() => {
-                this.search(query)
-            }, 500);
+            this.keyPressTimeout = setTimeout(() => this.search(query), 500);
         } else {
             this.setState({books: [], loading: false});
         }
     };
 
     onChangeShelf = (book, shelf) => {
-        const promise = this.props.onChangeShelf(book, shelf);
-        const trashblePromise = makeTrashable(promise);
-        trashblePromise.then(() => {
-            this.setState({
-                books: this.state.books.map(b => {
-                    if (b.id === book.id) {
-                        b.shelf = shelf;
-                    }
+        return this.props
+            .registerPromise(this.props.onChangeShelf(book, shelf))
+            .then(() => {
+                this.setState({
+                    books: this.state.books.map(b => {
+                        if (b.id === book.id) {
+                            b.shelf = shelf;
+                        }
 
-                    return b;
-                })
+                        return b;
+                    })
+                });
             });
-        });
-        this.trashablePromises.push(trashblePromise);
-        return trashblePromise;
     };
 
     render() {
@@ -138,4 +124,4 @@ class SearchBooks extends React.Component {
     }
 }
 
-export default SearchBooks;
+export default makeComponentTrashable(SearchBooks);

@@ -1,5 +1,5 @@
 import React from 'react';
-import makeTrashable from 'trashable';
+import makeComponentTrashable from 'trashable-react';
 
 class BookCover extends React.Component {
     state = { // Default dimensions
@@ -7,30 +7,19 @@ class BookCover extends React.Component {
         height: 170
     };
 
-    trashablePromises = []; // To keep track of async side effect
-
     componentDidMount() {
-        const promise = this.getImageDimensions(this.props.image);
-        const trashablePromise = makeTrashable(promise);
-        trashablePromise
+        this.props
+            .registerPromise(this.getImageDimensions(this.props.image))
             .then(dimensions => {
                 const {width, height} = dimensions;
                 this.setState({
                     imageDimensions: {width, height}
                 });
             });
-        this.trashablePromises.push(trashablePromise);
-    }
-
-    componentWillUnmount() {
-        // To make sure the is no async side effect running
-        while (this.trashablePromises.length) {
-            this.trashablePromises.shift().trash();
-        }
     }
 
     getImageDimensions = (imageUrl) => {
-        return makeTrashable(new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const img = new Image();
 
             img.onload = function () {
@@ -39,7 +28,7 @@ class BookCover extends React.Component {
             };
             img.onerror = reject;
             img.src = imageUrl;
-        }));
+        });
     };
 
     render() {
@@ -59,4 +48,4 @@ class BookCover extends React.Component {
     }
 }
 
-export default BookCover;
+export default makeComponentTrashable(BookCover);

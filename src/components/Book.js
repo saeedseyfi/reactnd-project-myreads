@@ -1,5 +1,5 @@
 import React from 'react';
-import makeTrashable from 'trashable';
+import makeComponentTrashable from 'trashable-react';
 import BookCover from './BookCover';
 import BookShelfChanger from './BookShelfChanger';
 
@@ -8,24 +8,12 @@ class Book extends React.Component {
         updating: false
     };
 
-    trashablePromises = []; // To keep track of async side effect
-
-    componentWillUnmount() {
-        // To make sure the is no async side effect running
-        while (this.trashablePromises.length) {
-            this.trashablePromises.shift().trash();
-        }
-    }
-
     onChangeShelf = shelf => {
-        const promise = this.props.onChangeShelf(this.props.book, shelf);
-        const trashablePromise = makeTrashable(promise);
-        this.setState({updating: true});
-        trashablePromise.then(() => {
-            this.setState({updating: false});
-        });
-        this.trashablePromises.push(trashablePromise);
-        return trashablePromise;
+        return this.props
+            .registerPromise(this.props.onChangeShelf(this.props.book, shelf))
+            .then(() => {
+                this.setState({updating: false});
+            });
     };
 
     render() {
@@ -46,4 +34,4 @@ class Book extends React.Component {
     }
 }
 
-export default Book;
+export default makeComponentTrashable(Book);
