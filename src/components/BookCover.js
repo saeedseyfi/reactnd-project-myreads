@@ -1,5 +1,5 @@
-import React from 'react'
-import makeTrashable from "trashable";
+import React from 'react';
+import makeTrashable from 'trashable';
 
 class BookCover extends React.Component {
     state = { // Default dimensions
@@ -59,4 +59,4 @@ class BookCover extends React.Component {
     }
 }
 
-export default BookCover
+export default BookCover;
