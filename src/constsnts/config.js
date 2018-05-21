@@ -1,3 +1,9 @@
 export default {
-    LANG: 'en'
-}
+    LANG: 'en',
+    ALL_SHELVES: [
+        'currentlyReading',
+        'wantToRead',
+        'read'
+    ],
+    SHELF_NOT_SET: 'none'
+};
