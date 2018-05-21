@@ -1,29 +1,49 @@
-import React from 'react'
+import React from 'react';
+import makeTrashable from 'trashable';
+import BookCover from './BookCover';
+import BookShelfChanger from './BookShelfChanger';
 
-function Book(props) {
-    return (
-        <div className="book">
-            <div className="book-top">
-                <div className="book-cover" style={{
-                    width: 128,
-                    height: 193,
-                    backgroundImage: 'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")'
-                }}></div>
-                <div className="book-shelf-changer">
-                    <select>
-                        <option value="none" disabled>Move to...</option>
-                        <option value="currentlyReading">Currently Reading
-                        </option>
-                        <option value="wantToRead">Want to Read</option>
-                        <option value="read">Read</option>
-                        <option value="none">None</option>
-                    </select>
+class Book extends React.Component {
+    state = {
+        updating: false
+    };
+
+    trashablePromises = []; // To keep track of async side effect
+
+    componentWillUnmount() {
+        // To make sure the is no async side effect running
+        while (this.trashablePromises.length) {
+            this.trashablePromises.shift().trash();
+        }
+    }
+
+    onChangeShelf = shelf => {
+        const promise = this.props.onChangeShelf(this.props.book, shelf);
+        const trashablePromise = makeTrashable(promise);
+        this.setState({updating: true});
+        trashablePromise.then(() => {
+            this.setState({updating: false});
+        });
+        this.trashablePromises.push(trashablePromise);
+        return trashablePromise;
+    };
+
+    render() {
+        const {book} = this.props;
+
+        return (
+            <div className={`book ${this.state.updating && 'updating'}`}>
+                <div className="book-top">
+                    <BookCover image={book.imageLinks.smallThumbnail}/>
+                    <BookShelfChanger
+                        shelf={book.shelf}
+                        onChangeShelf={this.onChangeShelf}/>
                 </div>
+                <div className="book-title">{book.title}</div>
+                <div className="book-authors">{book.subtitle}</div>
             </div>
-            <div className="book-title">To Kill a Mockingbird</div>
-            <div className="book-authors">Harper Lee</div>
-        </div>
-    )
+        );
+    }
 }
 
-export default Book
+export default Book;
