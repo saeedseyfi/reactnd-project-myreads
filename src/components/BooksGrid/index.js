@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Book from '../Book';
 import './index.css';
-import PropTypes from "prop-types";
 
 function BooksGrid(props) {
     const {books, onChangeShelf} = props;

@@ -1,16 +1,55 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import makeComponentTrashable from 'trashable-react';
+import ProgressBar from 'react-progress-bar-plus';
 import BooksGrid from '../BooksGrid';
+import * as BooksAPI from '../../utils/BooksAPI';
 import ROUTES from '../../constsnts/routes';
 import MESSAGES from '../../constsnts/messages';
 import CONFIG from '../../constsnts/config';
 import './index.css';
+import 'react-progress-bar-plus/lib/progress-bar.css';
 
 class ListBooks extends React.Component {
     static propTypes = {
-        books: PropTypes.array.isRequired,
-        onChangeShelf: PropTypes.func.isRequired
+        registerPromise: PropTypes.func.isRequired
+    };
+
+    state = {
+        loading: true,
+        books: []
+    };
+
+    componentDidMount() {
+        const {registerPromise} = this.props;
+
+        registerPromise(BooksAPI.getAll())
+            .then(books => this.setState({books, loading: false}));
+    };
+
+    onChangeShelf = (book, shelf) => {
+        const {registerPromise} = this.props;
+
+        return registerPromise(BooksAPI.update(book, shelf))
+            .then(() => {
+                let books = this.state.books;
+
+                if (shelf === CONFIG.SHELF_NOT_SET) { // Unsetting book from the shelf
+                    books = books.filter(b => {
+                        return b.id !== book.id;
+                    })
+                } else { // Updating from a shelf to other
+                    books = books.map(b => {
+                        if (b.id === book.id) {
+                            b.shelf = shelf;
+                        }
+                        return b;
+                    })
+                }
+
+                this.setState({books});
+            });
     };
 
     sortShelves = shelves => {
@@ -33,13 +72,16 @@ class ListBooks extends React.Component {
     };
 
     render() {
-        const {books, onChangeShelf} = this.props;
+        const {loading, books} = this.state;
 
         return (
             <div className="list-books">
-                <div className="list-books-title">
-                    <h1>{MESSAGES['MY_READS']}</h1>
-                </div>
+                <ProgressBar onTop={true} autoIncrement={true} spinner='right' percent={loading ? 20 : 100}/>
+                {!loading && (
+                    <div className="list-books-title">
+                        <h1>{MESSAGES['MY_READS']}</h1>
+                    </div>
+                )}
                 <div className="list-books-content">
                     <div>
                         {this.getShelves(books).map(shelf => (
@@ -47,7 +89,7 @@ class ListBooks extends React.Component {
                                 <h2 className="bookshelf-title">{MESSAGES['SHELF_TITLE.' + shelf]}</h2>
                                 <div className="bookshelf-books">
                                     <BooksGrid
-                                        onChangeShelf={onChangeShelf}
+                                        onChangeShelf={this.onChangeShelf}
                                         books={books.filter(book => book.shelf === shelf)}/>
                                 </div>
                             </div>
@@ -62,4 +104,4 @@ class ListBooks extends React.Component {
     }
 }
 
-export default ListBooks;
+export default makeComponentTrashable(ListBooks);

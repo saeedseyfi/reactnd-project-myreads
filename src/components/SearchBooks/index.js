@@ -1,17 +1,18 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import makeComponentTrashable from 'trashable-react';
+import ProgressBar from 'react-progress-bar-plus';
 import PropTypes from 'prop-types';
 import BooksGrid from '../BooksGrid';
 import ROUTES from '../../constsnts/routes';
 import MESSAGES from '../../constsnts/messages/index';
 import * as BooksAPI from '../../utils/BooksAPI';
 import './index.css';
+import 'react-progress-bar-plus/lib/progress-bar.css';
 
 class SearchBooks extends React.Component {
     static propTypes = {
-        registerPromise: PropTypes.func.isRequired,
-        onChangeShelf: PropTypes.func.isRequired
+        registerPromise: PropTypes.func.isRequired
     };
 
     state = {
@@ -36,7 +37,7 @@ class SearchBooks extends React.Component {
             this.previousSearchPromise.trash();
         }
 
-        const trashablePromise = registerPromise(BooksAPI.search(query));
+        const trashablePromise = registerPromise(BooksAPI.search(query.trim()));
 
         trashablePromise.then(books => {
             if (books) {
@@ -77,9 +78,9 @@ class SearchBooks extends React.Component {
     };
 
     onChangeShelf = (book, shelf) => {
-        const {registerPromise, onChangeShelf} = this.props;
+        const {registerPromise} = this.props;
 
-        return registerPromise(onChangeShelf(book, shelf))
+        return registerPromise(BooksAPI.update(book, shelf))
             .then(() => {
                 this.setState({
                     books: this.state.books.map(b => {
@@ -95,8 +96,10 @@ class SearchBooks extends React.Component {
 
     render() {
         const {loading, books} = this.state;
+
         return (
             <div className="search-books">
+                <ProgressBar onTop={true} autoIncrement={true} spinner='right' percent={loading ? 20 : 100}/>
                 <div className="search-books-bar">
                     <Link className="close-search" to={ROUTES.LIST_BOOKS}>Close</Link>
                     <div className="search-books-input-wrapper">
@@ -111,18 +114,11 @@ class SearchBooks extends React.Component {
                     </div>
                 </div>
                 <div className="search-books-results">
-                    {loading &&
-                    <h2 className="loading">
-                        <span>
-                            {MESSAGES['LOADING']}
-                        </span>
-                    </h2>
-                    }
-                    {books.length > 0 &&
-                    <BooksGrid
-                        onChangeShelf={this.onChangeShelf}
-                        books={books}/>
-                    }
+                    {books.length > 0 && (
+                        <BooksGrid
+                            onChangeShelf={this.onChangeShelf}
+                            books={books}/>
+                    )}
                 </div>
             </div>
         );

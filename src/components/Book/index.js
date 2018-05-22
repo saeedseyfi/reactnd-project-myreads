@@ -32,15 +32,15 @@ class Book extends React.Component {
         return (
             <div className={`book ${this.state.updating && 'updating'}`}>
                 <div className="book-top">
-                    <BookCover image={book.imageLinks.smallThumbnail}/>
+                    <BookCover image={book.imageLinks.smallThumbnail || book.imageLinks.smallThumbnail}/>
                     <ShelfChanger
                         shelf={book.shelf || CONFIG.SHELF_NOT_SET}
                         allShelves={CONFIG.ALL_SHELVES}
                         notSetShelfName={CONFIG.SHELF_NOT_SET}
                         onChangeShelf={this.onChangeShelf}/>
                 </div>
-                <div className="book-title">{book.title}</div>
-                <div className="book-authors">{book.subtitle}</div>
+                {book.title && <div className="book-title">{book.title}</div>}
+                {book.authors.length > 0 && <div className="book-authors">{book.authors.join(', ')}</div>}
             </div>
         );
     }
