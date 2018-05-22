@@ -1,4 +1,4 @@
 export default {
-    HOME: '/',
+    LIST_BOOKS: '/',
     SEARCH: '/search'
 };

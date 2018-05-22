@@ -1,15 +1,22 @@
 import React from 'react';
 import makeComponentTrashable from 'trashable-react';
+import PropTypes from 'prop-types';
 
 class Cover extends React.Component {
+    static propTypes = {
+        registerPromise: PropTypes.func.isRequired,
+        image: PropTypes.string.isRequired
+    };
+
     state = { // Default dimensions
         width: 128,
         height: 170
     };
 
     componentDidMount() {
-        this.props
-            .registerPromise(this.getImageDimensions(this.props.image))
+        const {registerPromise, image} = this.props;
+
+        registerPromise(this.getImageDimensions(image))
             .then(dimensions => {
                 const {width, height} = dimensions;
                 this.setState({

@@ -1,12 +1,18 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
-import BooksGrid from '../BooksGrid'
-import ROUTES from '../../constsnts/routes'
-import MESSAGES from '../../constsnts/messages'
-import CONFIG from '../../constsnts/config'
-import './index.css'
+import React from 'react';
+import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import BooksGrid from '../BooksGrid';
+import ROUTES from '../../constsnts/routes';
+import MESSAGES from '../../constsnts/messages';
+import CONFIG from '../../constsnts/config';
+import './index.css';
 
 class ListBooks extends React.Component {
+    static propTypes = {
+        books: PropTypes.array.isRequired,
+        onChangeShelf: PropTypes.func.isRequired
+    };
+
     sortShelves = shelves => {
         return shelves.sort((a, b) => (
             CONFIG.ALL_SHELVES.indexOf(a) > CONFIG.ALL_SHELVES.indexOf(b) ? 1 :

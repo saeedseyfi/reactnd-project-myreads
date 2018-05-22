@@ -1,18 +1,25 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import makeComponentTrashable from 'trashable-react';
+import PropTypes from 'prop-types';
 import BooksGrid from '../BooksGrid';
 import ROUTES from '../../constsnts/routes';
 import MESSAGES from '../../constsnts/messages/index';
 import * as BooksAPI from '../../utils/BooksAPI';
-import './index.css'
+import './index.css';
 
 class SearchBooks extends React.Component {
+    static propTypes = {
+        registerPromise: PropTypes.func.isRequired,
+        onChangeShelf: PropTypes.func.isRequired
+    };
+
     state = {
         loading: false,
         books: [],
         query: ''
     };
+
     previousSearchPromise; // To abort the last request if it's still pending
     keyPressTimeout; // To make sure we don't send repeated requests to server while typing
     searchInput; // To keep a reference of input to focus on it
@@ -22,12 +29,14 @@ class SearchBooks extends React.Component {
     }
 
     search = query => {
+        const {registerPromise} = this.props;
+
         // Forget about the previous request if it's still running
         if (this.previousSearchPromise) {
             this.previousSearchPromise.trash();
         }
 
-        const trashablePromise = this.props.registerPromise(BooksAPI.search(query));
+        const trashablePromise = registerPromise(BooksAPI.search(query));
 
         trashablePromise.then(books => {
             if (books) {
@@ -68,8 +77,9 @@ class SearchBooks extends React.Component {
     };
 
     onChangeShelf = (book, shelf) => {
-        return this.props
-            .registerPromise(this.props.onChangeShelf(book, shelf))
+        const {registerPromise, onChangeShelf} = this.props;
+
+        return registerPromise(onChangeShelf(book, shelf))
             .then(() => {
                 this.setState({
                     books: this.state.books.map(b => {
@@ -88,7 +98,7 @@ class SearchBooks extends React.Component {
         return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <Link className="close-search" to={ROUTES.HOME}>Close</Link>
+                    <Link className="close-search" to={ROUTES.LIST_BOOKS}>Close</Link>
                     <div className="search-books-input-wrapper">
                         <input
                             type="text"

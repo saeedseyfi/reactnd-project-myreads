@@ -1,28 +1,27 @@
 import React from 'react';
 import MESSAGES from '../../constsnts/messages/index';
-import CONFIG from '../../constsnts/config';
+import PropTypes from "prop-types";
 
 class ShelfChanger extends React.Component {
     render() {
-        const {shelf, onChangeShelf} = this.props;
-        const shelves = CONFIG.ALL_SHELVES;
+        const {shelf, onChangeShelf, allShelves, notSetShelfName} = this.props;
 
         return (
             <div className="book-shelf-changer">
                 <select
-                    value={shelf || CONFIG.SHELF_NOT_SET}
+                    value={shelf}
                     onChange={e => onChangeShelf(e.target.options[e.target.selectedIndex].value)}>
                     <option disabled>
                         {MESSAGES['MOVE_TO']}
                     </option>
-                    {shelves.map(shelf => (
+                    {allShelves.map(shelf => (
                         <option
                             key={shelf}
                             value={shelf}>
                             {MESSAGES['SHELF_TITLE.' + shelf]}
                         </option>
                     ))}
-                    <option value={CONFIG.SHELF_NOT_SET}>
+                    <option value={notSetShelfName}>
                         {MESSAGES['SHELF_TITLE.none']}
                     </option>
                 </select>
@@ -30,5 +29,12 @@ class ShelfChanger extends React.Component {
         );
     }
 }
+
+ShelfChanger.propTypes = {
+    shelf: PropTypes.string.isRequired,
+    allShelves: PropTypes.array.isRequired,
+    notSetShelfName: PropTypes.string.isRequired,
+    onChangeShelf: PropTypes.func.isRequired
+};
 
 export default ShelfChanger;
