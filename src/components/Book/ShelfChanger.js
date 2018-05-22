@@ -1,8 +1,8 @@
-import React from 'react'
-import MESSAGES from '../constsnts/messages'
-import CONFIG from '../constsnts/config'
+import React from 'react';
+import MESSAGES from '../../constsnts/messages/index';
+import CONFIG from '../../constsnts/config';
 
-class BookShelfChanger extends React.Component {
+class ShelfChanger extends React.Component {
     render() {
         const {shelf, onChangeShelf} = this.props;
         const shelves = CONFIG.ALL_SHELVES;
@@ -31,4 +31,4 @@ class BookShelfChanger extends React.Component {
     }
 }
 
-export default BookShelfChanger
+export default ShelfChanger;

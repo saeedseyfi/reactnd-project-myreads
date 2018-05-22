@@ -1,10 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import makeComponentTrashable from 'trashable-react';
-import Book from './Book';
-import ROUTES from '../constsnts/routes';
-import MESSAGES from '../constsnts/messages';
-import * as BooksAPI from '../utils/BooksAPI';
+import BooksGrid from '../BooksGrid';
+import ROUTES from '../../constsnts/routes';
+import MESSAGES from '../../constsnts/messages/index';
+import * as BooksAPI from '../../utils/BooksAPI';
+import './index.css'
 
 class SearchBooks extends React.Component {
     state = {
@@ -108,15 +109,9 @@ class SearchBooks extends React.Component {
                     </h2>
                     }
                     {books.length > 0 &&
-                    <ol className="books-grid">
-                        {books.map(book => (
-                            <li key={book.id}>
-                                <Book
-                                    book={book}
-                                    onChangeShelf={this.onChangeShelf}/>
-                            </li>
-                        ))}
-                    </ol>
+                    <BooksGrid
+                        onChangeShelf={this.onChangeShelf}
+                        books={books}/>
                     }
                 </div>
             </div>

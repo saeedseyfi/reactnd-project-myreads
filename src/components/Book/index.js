@@ -1,7 +1,8 @@
 import React from 'react';
 import makeComponentTrashable from 'trashable-react';
-import BookCover from './BookCover';
-import BookShelfChanger from './BookShelfChanger';
+import BookCover from './Cover';
+import ShelfChanger from './ShelfChanger';
+import './index.css';
 
 class Book extends React.Component {
     state = {
@@ -23,7 +24,7 @@ class Book extends React.Component {
             <div className={`book ${this.state.updating && 'updating'}`}>
                 <div className="book-top">
                     <BookCover image={book.imageLinks.smallThumbnail}/>
-                    <BookShelfChanger
+                    <ShelfChanger
                         shelf={book.shelf}
                         onChangeShelf={this.onChangeShelf}/>
                 </div>

@@ -1,9 +1,10 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import BookShelf from './BookShelf'
-import ROUTES from '../constsnts/routes'
-import MESSAGES from '../constsnts/messages'
-import CONFIG from '../constsnts/config'
+import BooksGrid from '../BooksGrid'
+import ROUTES from '../../constsnts/routes'
+import MESSAGES from '../../constsnts/messages'
+import CONFIG from '../../constsnts/config'
+import './index.css'
 
 class ListBooks extends React.Component {
     sortShelves = shelves => {
@@ -36,11 +37,14 @@ class ListBooks extends React.Component {
                 <div className="list-books-content">
                     <div>
                         {this.getShelves(books).map(shelf => (
-                            <BookShelf
-                                key={shelf}
-                                shelf={shelf}
-                                onChangeShelf={onChangeShelf}
-                                books={books.filter(book => book.shelf === shelf)}/>
+                            <div className="bookshelf" key={shelf}>
+                                <h2 className="bookshelf-title">{MESSAGES['SHELF_TITLE.' + shelf]}</h2>
+                                <div className="bookshelf-books">
+                                    <BooksGrid
+                                        onChangeShelf={onChangeShelf}
+                                        books={books.filter(book => book.shelf === shelf)}/>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>

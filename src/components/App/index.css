@@ -1,0 +1,30 @@
+html,
+body,
+.root {
+    height: 100%;
+}
+
+body {
+    line-height: 1.5;
+}
+
+body,
+.app {
+    background: white;
+}
+
+.loading {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
+
+.loading span {
+    position: absolute;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+}

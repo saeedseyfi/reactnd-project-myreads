@@ -1,7 +1,7 @@
 import React from 'react';
 import makeComponentTrashable from 'trashable-react';
 
-class BookCover extends React.Component {
+class Cover extends React.Component {
     state = { // Default dimensions
         width: 128,
         height: 170
@@ -48,4 +48,4 @@ class BookCover extends React.Component {
     }
 }
 
-export default makeComponentTrashable(BookCover);
+export default makeComponentTrashable(Cover);
