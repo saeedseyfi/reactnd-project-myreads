@@ -4,8 +4,8 @@ import makeComponentTrashable from 'trashable-react';
 import PropTypes from 'prop-types';
 import BooksGrid from '../BooksGrid';
 import SmartProgressBar from '../SmartProgressBar';
-import ROUTES from '../../constsnts/routes';
-import MESSAGES from '../../constsnts/messages';
+import ROUTES from '../../constants/routes';
+import MESSAGES from '../../constants/messages';
 import * as BooksAPI from '../../utils/BooksAPI';
 import './index.css';
 

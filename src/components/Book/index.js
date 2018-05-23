@@ -3,7 +3,7 @@ import makeComponentTrashable from 'trashable-react';
 import PropTypes from 'prop-types';
 import BookCover from './Cover';
 import ShelfChanger from './ShelfChanger';
-import CONFIG from '../../constsnts/config';
+import CONFIG from '../../constants/config';
 import './index.css';
 
 class Book extends React.Component {

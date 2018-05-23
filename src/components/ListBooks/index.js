@@ -2,9 +2,9 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import BooksGrid from '../BooksGrid';
-import ROUTES from '../../constsnts/routes';
-import MESSAGES from '../../constsnts/messages';
-import CONFIG from '../../constsnts/config';
+import ROUTES from '../../constants/routes';
+import MESSAGES from '../../constants/messages';
+import CONFIG from '../../constants/config';
 import './index.css';
 
 const sortShelves = shelves => {

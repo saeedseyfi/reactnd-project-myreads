@@ -4,8 +4,8 @@ import SmartProgressBar from '../SmartProgressBar';
 import ListBooks from '../ListBooks';
 import SearchBooks from '../SearchBooks';
 import * as BooksAPI from '../../utils/BooksAPI';
-import ROUTES from '../../constsnts/routes';
-import CONFIG from '../../constsnts/config';
+import ROUTES from '../../constants/routes';
+import CONFIG from '../../constants/config';
 import './index.css';
 
 class BooksApp extends React.Component {
