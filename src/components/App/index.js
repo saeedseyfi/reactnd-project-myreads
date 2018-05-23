@@ -31,10 +31,10 @@ class BooksApp extends React.Component {
                         return b.id !== book.id;
                     });
                 } else if (books.filter(b => b.id === book.id).length === 0) { // Setting a new book to shelf
-                    books = books.concat([{
+                    books.push({
                         ...book,
                         shelf
-                    }]);
+                    });
                 } else { // Updating a book's shelf
                     books = books.map(b => {
                         if (b.id === book.id) {
