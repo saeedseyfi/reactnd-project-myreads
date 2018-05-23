@@ -1,0 +1,10 @@
+{
+  "LANG": "en",
+  "ALL_SHELVES": [
+    "currentlyReading",
+    "wantToRead",
+    "read"
+  ],
+  "SHELF_NOT_SET": "none",
+  "IMAGE_NOT_SET": "http://via.placeholder.com/128x170?text=No+Image"
+}

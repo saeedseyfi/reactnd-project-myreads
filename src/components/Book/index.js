@@ -27,20 +27,20 @@ class Book extends React.Component {
     };
 
     render() {
-        const {book} = this.props;
+        const {imageLinks = {smallThumbnail: CONFIG.IMAGE_NOT_SET}, shelf = CONFIG.SHELF_NOT_SET, title, authors = []} = this.props.book;
 
         return (
             <div className={`book ${this.state.updating && 'updating'}`}>
                 <div className="book-top">
-                    <BookCover image={book.imageLinks.smallThumbnail || book.imageLinks.smallThumbnail}/>
+                    <BookCover image={imageLinks.smallThumbnail}/>
                     <ShelfChanger
-                        shelf={book.shelf || CONFIG.SHELF_NOT_SET}
+                        shelf={shelf}
                         allShelves={CONFIG.ALL_SHELVES}
                         notSetShelfName={CONFIG.SHELF_NOT_SET}
                         onChangeShelf={this.onChangeShelf}/>
                 </div>
-                {book.title && <div className="book-title">{book.title}</div>}
-                {book.authors.length > 0 && <div className="book-authors">{book.authors.join(', ')}</div>}
+                {title && <div className="book-title">{title}</div>}
+                {authors.length > 0 && <div className="book-authors">{authors.join(', ')}</div>}
             </div>
         );
     }
