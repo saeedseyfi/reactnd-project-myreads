@@ -20,6 +20,8 @@ class Book extends React.Component {
     onChangeShelf = shelf => {
         const {registerPromise, book} = this.props;
 
+        this.setState({updating: true});
+
         return registerPromise(this.props.onChangeShelf(book, shelf))
             .then(() => {
                 this.setState({updating: false});
@@ -27,10 +29,11 @@ class Book extends React.Component {
     };
 
     render() {
+        const {updating} = this.state;
         const {imageLinks = {smallThumbnail: CONFIG.IMAGE_NOT_SET}, shelf = CONFIG.SHELF_NOT_SET, title, authors = []} = this.props.book;
 
         return (
-            <div className={`book ${this.state.updating && 'updating'}`}>
+            <div className={`book ${updating ? 'updating' : ''}`}>
                 <div className="book-top">
                     <BookCover image={imageLinks.smallThumbnail}/>
                     <ShelfChanger
