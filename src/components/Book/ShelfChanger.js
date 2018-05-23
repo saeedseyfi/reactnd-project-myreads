@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MESSAGES from '../../constsnts/messages/index';
+import MESSAGES from '../../constsnts/messages';
 
 class ShelfChanger extends React.Component {
     render() {

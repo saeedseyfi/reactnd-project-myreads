@@ -1,18 +1,18 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import makeComponentTrashable from 'trashable-react';
-import ProgressBar from 'react-progress-bar-plus';
 import PropTypes from 'prop-types';
 import BooksGrid from '../BooksGrid';
+import SmartProgressBar from '../SmartProgressBar';
 import ROUTES from '../../constsnts/routes';
-import MESSAGES from '../../constsnts/messages/index';
+import MESSAGES from '../../constsnts/messages';
 import * as BooksAPI from '../../utils/BooksAPI';
 import './index.css';
-import 'react-progress-bar-plus/lib/progress-bar.css';
 
 class SearchBooks extends React.Component {
     static propTypes = {
-        registerPromise: PropTypes.func.isRequired
+        registerPromise: PropTypes.func.isRequired,
+        myBooks: PropTypes.array.isRequired
     };
 
     state = {
@@ -28,6 +28,18 @@ class SearchBooks extends React.Component {
     componentDidMount() {
         this.searchInput.focus();
     }
+
+
+    setMyBooksShelves = books => {
+        const {myBooks} = this.props;
+
+        const myBooksById = myBooks.reduce((map, obj) => {
+            map[obj.id] = obj;
+            return map;
+        }, {});
+
+        return books.map(b => myBooksById[b.id] ? {...b, shelf: myBooksById[b.id].shelf} : b)
+    };
 
     search = query => {
         const {registerPromise} = this.props;
@@ -47,7 +59,7 @@ class SearchBooks extends React.Component {
                     });
                 } else if (books.length) {
                     this.setState({
-                        books: books
+                        books: this.setMyBooksShelves(books)
                     });
                 }
             }
@@ -99,7 +111,7 @@ class SearchBooks extends React.Component {
 
         return (
             <div className="search-books">
-                <ProgressBar onTop={true} autoIncrement={true} spinner='right' percent={loading ? 20 : 100}/>
+                <SmartProgressBar show={loading}/>
                 <div className="search-books-bar">
                     <Link className="close-search" to={ROUTES.LIST_BOOKS}>Close</Link>
                     <div className="search-books-input-wrapper">
