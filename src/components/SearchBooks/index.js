@@ -12,6 +12,7 @@ import './index.css';
 class SearchBooks extends React.Component {
     static propTypes = {
         registerPromise: PropTypes.func.isRequired,
+        onChangeShelf: PropTypes.func.isRequired,
         myBooks: PropTypes.array.isRequired
     };
 
@@ -90,9 +91,9 @@ class SearchBooks extends React.Component {
     };
 
     onChangeShelf = (book, shelf) => {
-        const {registerPromise} = this.props;
+        const {registerPromise, onChangeShelf} = this.props;
 
-        return registerPromise(BooksAPI.update(book, shelf))
+        return registerPromise(onChangeShelf(book, shelf))
             .then(() => {
                 this.setState({
                     books: this.state.books.map(b => {

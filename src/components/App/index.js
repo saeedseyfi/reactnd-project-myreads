@@ -20,6 +20,8 @@ class BooksApp extends React.Component {
     };
 
     onChangeShelf = (book, shelf) => {
+        this.setState({loading: true});
+
         return BooksAPI.update(book, shelf)
             .then(() => {
                 let books = this.state.books;
@@ -27,17 +29,22 @@ class BooksApp extends React.Component {
                 if (shelf === CONFIG.SHELF_NOT_SET) { // Unsetting book from the shelf
                     books = books.filter(b => {
                         return b.id !== book.id;
-                    })
-                } else { // Updating from a shelf to other
+                    });
+                } else if (books.filter(b => b.id === book.id).length === 0) { // Setting a new book to shelf
+                    books = books.concat([{
+                        ...book,
+                        shelf
+                    }]);
+                } else { // Updating a book's shelf
                     books = books.map(b => {
                         if (b.id === book.id) {
                             b.shelf = shelf;
                         }
                         return b;
-                    })
+                    });
                 }
 
-                this.setState({books});
+                this.setState({books, loading: false});
             });
     };
 
